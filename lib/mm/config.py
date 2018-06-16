@@ -17,7 +17,7 @@ from face import FaceDetection
 
 class MMConfig (CommonConfig):
     
-    CONFIG_DATA = json.loads(sys.argv[1]);
+    CONFIG_DATA = json.loads(sys.argv[1])
     THRESHOLD_ATTR = 'threshold'
     USE_USB_CAM_ATTR = 'useUSBCam'
     TRAINING_FILE_ATTR = 'trainingFile'
@@ -80,9 +80,15 @@ class MMConfig (CommonConfig):
             else:
                 raise Exception
         except Exception:
-            import webcam
-            cls.toNode("status", "Webcam loaded...")
-            return webcam.OpenCVCapture(device_id=0)
+            try:
+                from kinect import OpenCVCapture
+                print("Loading Kinect")
+                cls.toNode("status", "Kinect loaded...")
+                return OpenCVCapture()
+            except Exception as e:
+                import webcam
+                cls.toNode("status", "Webcam loaded...")
+                return webcam.OpenCVCapture(device_id=0)
         cls.toNode("status", "-" * 20)
 
     

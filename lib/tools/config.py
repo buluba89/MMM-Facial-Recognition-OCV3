@@ -29,7 +29,7 @@ class ToolsConfig (CommonConfig):
     captureName = ''
 
 
-    USERS = ["User1", "User2", "User3", "User4", "User5", "User6", "User7", "User8", "User9", "User10"]
+    USERS = ["john", "User2", "User3", "User4", "User5", "User6", "User7", "User8", "User9", "User10"]
 
     if ('FACE_USERS' in os.environ):
         u = os.environ['FACE_USERS']
@@ -83,16 +83,22 @@ class ToolsConfig (CommonConfig):
     @classmethod
     def getCamera(cls):
         try:
-            import picam
-            print("Loading PiCamera")
-            capture = picam.OpenCVCapture(True)
-            print("PiCamera loaded")
-            capture.start()
-            return capture
+            from lib.common.kinect import OpenCVCapture
+            print("Loading Kinect")
+            return OpenCVCapture()
         except Exception as e:
             print(e)
-            import webcam
-            return webcam.OpenCVCapture(device_id=0)
+            try:
+                import picam
+                print("Loading PiCamera")
+                capture = picam.OpenCVCapture(True)
+                print("PiCamera loaded")
+                capture.start()
+                return capture
+            except Exception as e:
+                print(e)
+                import webcam
+                return webcam.OpenCVCapture(device_id=0)
 
     @classmethod
     def model(cls):
